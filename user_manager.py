@@ -5,7 +5,7 @@ class User_Manager:
         self.waiting = waiting
         self.bot = bot
 
-    def creat_info(self, user_id):
+    def create_info(self, user_id):
         if self.db.get_user_data(user_id):
             pass
         else:

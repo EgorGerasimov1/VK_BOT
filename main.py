@@ -29,7 +29,7 @@ def run():
             user_id = event.obj.message['from_id']
             text = event.obj.message['text'].lower().strip()
 
-            user_manager.creat_info(user_id)
+            user_manager.create_info(user_id)
 
             if user_manager.handler_waiting(user_id, handlers, text):
                 continue
