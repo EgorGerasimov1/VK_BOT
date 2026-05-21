@@ -34,7 +34,7 @@ def run():
             if user_manager.handler_waiting(user_id, handlers, text):
                 continue
             
-            if text == 'меню' or 'начать':
+            if text in ['меню','начать']:
                 bot.send_message(user_id, 'Вот меню', KeyboardManager.get_main_menu())
             elif text == 'привет':
                 bot.send_message(user_id, 'И тебе привет, напиши (меню) для работы со мной')
