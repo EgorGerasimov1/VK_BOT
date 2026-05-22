@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from config import DATABASE_PATH
 
 class DataBase:
-    def __init__(self):
+    def __init__(self, DATABASE_PATH):
         os.makedirs('data', exist_ok=True) 
         self.db_path = DATABASE_PATH
         self.init_db()

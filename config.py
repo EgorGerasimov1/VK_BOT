@@ -8,6 +8,8 @@ load_dotenv()
 TOKEN = os.getenv('VK_TOKEN')
 ID_CLUB = os.getenv('VK_GROUP_ID')
 
+MAX_LEN_MESSAGE = 100
+
 #DB
 DATABASE_PATH = 'data/database.db'
 

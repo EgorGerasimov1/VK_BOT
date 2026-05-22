@@ -26,6 +26,10 @@ class FoodHandler(BaseHandler):
         protein = parts[1]
         calories = parts[2]
 
+        if not self.check_text(product):
+            self.bot.send_message(user_id, 'Продукт не должен быть число')
+            return
+
         if not self.check_digit(protein) or not self.check_digit(calories):
             self.bot.send_message(user_id, 'Укажите парамметры числом!(неотрицательным)')
             return
@@ -50,5 +54,6 @@ class FoodHandler(BaseHandler):
             message += 'Сегодня вы еще не ели'
 
         return message
+    
         
         

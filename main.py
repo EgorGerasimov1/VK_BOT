@@ -1,6 +1,6 @@
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
-from config import TOKEN, ID_CLUB, HANDLERS_CLASSES
+from config import TOKEN, ID_CLUB, HANDLERS_CLASSES, DATABASE_PATH, MAX_LEN_MESSAGE
 from vkbot import VkBot
 from keyboard import KeyboardManager
 from database import DataBase
@@ -15,7 +15,7 @@ vk = vk_session.get_api()
 
 bot = VkBot(vk)
 waiting = Waiting()
-db = DataBase()
+db = DataBase(DATABASE_PATH)
 cache = BotCaсhe()
 user_manager = User_Manager(db, waiting, bot)
 
@@ -41,7 +41,7 @@ def _handler_event(event) -> bool:
         user_id = event.obj.message['from_id']
         text = event.obj.message['text'].lower().strip()
 
-        if len(text) > 100:
+        if len(text) > MAX_LEN_MESSAGE:
             bot.send_message(user_id, 'Слишком длинный запрос!')
             return False
 

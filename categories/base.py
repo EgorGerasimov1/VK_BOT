@@ -11,12 +11,12 @@ class BaseHandler:
     def handle_waiting(self):
         raise NotImplementedError
     
-    def check_text(self, value):
+    def check_text(self, value) -> bool:
         if value.isdigit():
             return False
         return True
 
-    def check_digit(self, value, allow_zero=True):
+    def check_digit(self, value, allow_zero=True) -> bool:
         value = value.replace(',','.')
         try:
            num = float(value)
