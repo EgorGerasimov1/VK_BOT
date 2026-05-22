@@ -17,19 +17,26 @@ class FoodHandler(BaseHandler):
 
     def handler_waiting(self, user_id, text):
         parts = text.split()
-        if len(parts) == 3:
-            product = parts[0]
-            protein = parts[1]
-            calories = parts[2]
-            self.db.add_food(user_id, product, protein, calories)
-            self.waiting.clean_waiting(user_id)
-            today_food = self.db.get_today_stats_food(user_id)
-            self.bot.send_message(user_id, f"Еда добавлена белка:{today_food['total_protein']} калорий:{today_food['total_calories']}")
-        else:
+
+        if len(parts) != 3:
             self.bot.send_message(user_id, 'ФОРМА: подукт белок калории')
+            return
+        
+        product = parts[0]
+        protein = parts[1]
+        calories = parts[2]
+
+        if not self.check_digit(protein) or not self.check_digit(calories):
+            self.bot.send_message(user_id, 'Укажите парамметры числом!(неотрицательным)')
+            return
+        
+        self.db.add_food(user_id, product, protein, calories)
+        self.waiting.clean_waiting(user_id)
+        today_food = self.db.get_today_stats_food(user_id)
+        self.bot.send_message(user_id, f"Еда добавлена белка:{today_food['total_protein']} калорий:{today_food['total_calories']}")
 
     def today_statistics(self, user_id):
-        stats = self.db.get_today_statistics(user_id)
+        stats = self.db.get_today_stats_food(user_id)
         food_list = self.db.get_today_food(user_id)
         message = 'Статистика за сегодня:\n'
         message += f"Белка сегодня: {stats['total_protein'] or '0'}\n"
@@ -43,5 +50,5 @@ class FoodHandler(BaseHandler):
             message += 'Сегодня вы еще не ели'
 
         return message
-
-
+        
+        

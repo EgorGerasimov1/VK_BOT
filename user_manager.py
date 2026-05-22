@@ -6,9 +6,7 @@ class User_Manager:
         self.bot = bot
 
     def create_info(self, user_id):
-        if self.db.get_user_data(user_id):
-            pass
-        else:
+        if not self.db.get_user_data(user_id):
             user_info = self.bot.get_user_info(user_id)
             self.db.add_user(user_id, user_info)
             self.bot.send_message(user_id, 'Напишите ваш Рост и Вес')
