@@ -41,7 +41,7 @@ class FoodHandler(BaseHandler):
             return (error, None, None, None)
         
         if not self.is_digit(protein) or not self.is_digit(calories):
-            error = 'Укажите парамметры числом!(неотрицательным)'
+            error = 'Укажите парамметры числами!(неотрицательнымы)'
             return (error, None, None, None)
         
         if float(protein) > MAX_AMOUNT_PROTEIN or float(calories) > MAX_AMOUNT_CALORIES:

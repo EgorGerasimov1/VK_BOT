@@ -23,7 +23,7 @@ user_manager = User_Manager(db, waiting, bot)
 handlers = {}
 for category, Handler_Class in HANDLERS_CLASSES.items():
     handlers[category] = Handler_Class(db, waiting, bot)
-
+    
 #Цикл работы программы
 def run():
     while True:

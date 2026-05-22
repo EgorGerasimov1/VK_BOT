@@ -94,13 +94,13 @@ class DataBase:
             result = cursor.fetchone()
             return result['user_name']
 
-    def edit_profile(self,user_id, weight, height):
+    def edit_profile(self,user_id, height, weight, age):
         with self.get_db() as conn:
             conn.execute('''
                 UPDATE users
-                SET weight = ?, height = ?
+                SET height = ?, weight = ?, age = ?
                 WHERE user_id = ?
-            ''', (weight, height, user_id))
+            ''', (weight, height, age, user_id))
 
     # FOOD CATEGORY
     def add_food(self, user_id, product, protein, calories):

@@ -30,3 +30,12 @@ COUNTER_FOOD_CALORIES = {
     250: 'Легкий прием пищи по калориям',
     0: 'Очень низкая калорийность'
 }
+
+#profile
+MAX_AGE  = 120
+MIN_HEIGHT = 55
+MAX_HEIGHT = 251
+MIN_WEIGHT = 10
+MAX_WEIGHT = 600
+MIN_BMI = 12
+MAX_BMI = 55
