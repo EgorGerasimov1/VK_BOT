@@ -1,6 +1,7 @@
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
-from config import TOKEN, ID_CLUB, HANDLERS_CLASSES, DATABASE_PATH, MAX_LEN_MESSAGE
+from config import TOKEN, ID_CLUB, DATABASE_PATH, MAX_LEN_MESSAGE
+from categories import HANDLERS_CLASSES
 from vkbot import VkBot
 from keyboard import KeyboardManager
 from database import DataBase

@@ -1,6 +1,6 @@
 from keyboard import KeyboardManager
 from .base import BaseHandler
-
+from config import COUNTER_FOOD_PROTEIN, COUNTER_FOOD_CALORIES, MAX_AMOUNT_CALORIES, MAX_AMOUNT_PROTEIN
 
 class FoodHandler(BaseHandler):
 
@@ -11,49 +11,84 @@ class FoodHandler(BaseHandler):
             self.bot.send_message(user_id, 'Напиши что сегодня поел по форме:\nПродукт белок калории')
             self.waiting.insert_waiting(user_id, 'food')
         elif action == 'stats':
-            message = self.today_statistics(user_id)
+            message = self.today_stats(user_id)
             self.bot.send_message(user_id, message)
 
 
     def handler_waiting(self, user_id, text):
-        parts = text.split()
-
-        if len(parts) != 3:
-            self.bot.send_message(user_id, 'ФОРМА: подукт белок калории')
+        error, product, protein, calories = self.valid_food_input(text)
+        if error:
+            self.bot.send_message(user_id, error)
             return
-        
-        product = parts[0]
-        protein = parts[1]
-        calories = parts[2]
-
-        if not self.check_text(product):
-            self.bot.send_message(user_id, 'Продукт не должен быть число')
-            return
-
-        if not self.check_digit(protein) or not self.check_digit(calories):
-            self.bot.send_message(user_id, 'Укажите парамметры числом!(неотрицательным)')
-            return
-        
         self.db.add_food(user_id, product, protein, calories)
         self.waiting.clean_waiting(user_id)
         today_food = self.db.get_today_stats_food(user_id)
-        self.bot.send_message(user_id, f"Еда добавлена белка:{today_food['total_protein']} калорий:{today_food['total_calories']}")
+        calculate_data = self.db.get_calculate_data(user_id)
+        message = self.form_response(product, protein, calories, today_food, calculate_data)
+        self.bot.send_message(user_id, message)
+    
+    def valid_food_input(self, text):
+        parts = text.split()
+        error = None
+        if len(parts) != 3:
+            error = 'ФОРМА: подукт белок калории'
+            return (error, None, None, None)
+        
+        product, protein, calories = parts
 
-    def today_statistics(self, user_id):
-        stats = self.db.get_today_stats_food(user_id)
+        if not self.is_text(product):
+            error = 'Продукт не должен быть числом'
+            return (error, None, None, None)
+        
+        if not self.is_digit(protein) or not self.is_digit(calories):
+            error = 'Укажите парамметры числом!(неотрицательным)'
+            return (error, None, None, None)
+        
+        if float(protein) > MAX_AMOUNT_PROTEIN or float(calories) > MAX_AMOUNT_CALORIES:
+            error = 'Укажите приемлемое значение белка(P<100) и калорий(C<2000)'
+            return (error, None, None, None)
+        
+        return (error, product, protein, calories)
+    
+    def form_response(self, product, protein, calories, today_food, data):
+        message = 'Ваш прием пищи:\n'
+        message += f'Вы съели: {product}\n'
+        for pr, text in COUNTER_FOOD_PROTEIN.items():
+            if int(protein) >= pr:
+                message += f'Белок: {text}\n'
+                break
+        for cal, text in COUNTER_FOOD_CALORIES.items():
+            if int(calories) >= cal:
+                message += f'Калории: {text}\n'
+                break
+        rda = self.calculate_rda(data['weight'])
+        bmr = self.calculate_bmr( data['weight'], data['height'], data['age'], data['gender'])
+        message += f"Вы съели сегодня: {today_food['total_protein']}г белка, {today_food['total_calories']} ккал\n"
+        message += f"Сколько нужно: От {rda['min_protein']} до {rda['max_protein']}г белка, {bmr} ккал"
+        return message
+
+    def today_stats(self, user_id):
+        today_food = self.db.get_today_stats_food(user_id)
         food_list = self.db.get_today_food(user_id)
-        message = 'Статистика за сегодня:\n'
-        message += f"Белка сегодня: {stats['total_protein'] or '0'}\n"
-        message += f"Калорий за сегодня: {stats['total_calories'] or '0'}\n"
+        calculate_data = self.db.get_calculate_data(user_id)
+        return self.form_today_stats(today_food, food_list, calculate_data)
+        
+    def form_today_stats(self, today_food, food_list, data):
+        rda = self.calculate_rda(data['weight'])
+        bmr = self.calculate_bmr( data['weight'], data['height'], data['age'], data['gender'])
 
+        message = 'Статистика за сегодня:\n'
+        message += f"Белка сегодня: {today_food['total_protein'] or '0'}\n"
+        message += f"Калорий за сегодня: {today_food['total_calories'] or '0'}\n"
+        message += f"Сколько нужно: От {rda['min_protein']} до {rda['max_protein']}г белка, {bmr} ккал\n"
         if food_list:
             for food in food_list:
                 message += f"-{food['product']}: {food['protein']}г белка, {food['calories']} ккал, {food['time_only']}"
                 message += '\n'
         else:
-            message += 'Сегодня вы еще не ели'
-
+            message += 'Сегодня вы еще не ели\n'
         return message
-    
+        
+
         
         

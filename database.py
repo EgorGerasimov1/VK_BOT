@@ -1,7 +1,6 @@
 import sqlite3
 import os
 from contextlib import contextmanager
-from config import DATABASE_PATH
 
 class DataBase:
     def __init__(self, DATABASE_PATH):
@@ -75,10 +74,10 @@ class DataBase:
             result = cursor.fetchone()
             return result
     
-    def get_weight_height(self, user_id):
+    def get_calculate_data(self, user_id):
         with self.get_db() as conn:
             cursor = conn.execute('''
-                SELECT weight, height
+                SELECT weight, height, age, gender
                 FROM users
                 where user_id = ?
             ''', (user_id,))

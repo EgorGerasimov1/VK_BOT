@@ -20,7 +20,7 @@ class KeyboardManager:
     @staticmethod
     def get_food_menu():
         keyboard = VkKeyboard(inline=True)
-        keyboard.add_callback_button('Еда сегодня', payload={'type': 'food', 'action': 'today'})
+        keyboard.add_callback_button('Прием пищи', payload={'type': 'food', 'action': 'today'})
         keyboard.add_callback_button('Статистика Еды', payload={'type': 'food', 'action': 'stats'})
         keyboard.add_line()
         keyboard.add_callback_button('Назад', payload={'type': 'main_menu', 'action': 'back'})

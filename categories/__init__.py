@@ -5,11 +5,13 @@ from .task import TaskHandler
 from .profile import ProfileHandler
 from .main_menu import MainMenuHandler
 
-__all__ = [
-    'SportHandler',
-    'FoodHandler',
-    'SleepHandler',
-    'TaskHandler',
-    'ProfileHandler',
-    'MainMenuHandler'
-]
+#Dict handlers
+
+HANDLERS_CLASSES = {
+    'food': FoodHandler,
+    'profile': ProfileHandler,
+    'sleep': SleepHandler,
+    'sport': SportHandler,
+    'task': TaskHandler,
+    'main_menu': MainMenuHandler
+} 
