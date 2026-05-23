@@ -20,7 +20,7 @@ class KeyboardManager:
     @staticmethod
     def get_food_menu():
         keyboard = VkKeyboard(inline=True)
-        keyboard.add_callback_button('Прием пищи', payload={'type': 'food', 'action': 'today'})
+        keyboard.add_callback_button('Прием пищи', payload={'type': 'food', 'action': 'add'})
         keyboard.add_callback_button('Статистика Еды', payload={'type': 'food', 'action': 'stats'})
         keyboard.add_line()
         keyboard.add_callback_button('Назад', payload={'type': 'main_menu', 'action': 'back'})
@@ -56,7 +56,7 @@ class KeyboardManager:
     @staticmethod
     def get_task_menu():
         keyboard = VkKeyboard(inline=True)
-        keyboard.add_callback_button('Задачи сегодня', payload={'type': 'task', 'action': 'today'})
+        keyboard.add_callback_button('Задачи сегодня', payload={'type': 'task', 'action': 'add'})
         keyboard.add_callback_button('Управление задачами', payload={'type': 'task', 'action': 'control'})
         keyboard.add_line()
         keyboard.add_callback_button('Назад', payload={'type': 'main_menu', 'action': 'back'})

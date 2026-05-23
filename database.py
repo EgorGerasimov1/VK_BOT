@@ -27,8 +27,8 @@ class DataBase:
                 CREATE TABLE IF NOT EXISTS users (
                     user_id INTEGER PRIMARY KEY,
                     user_name TEXT NOT NULL,
-                    weight REAL,
                     height REAL,
+                    weight REAL,
                     age INTEGER,
                     gender TEXT,
                     goal TEXT,
@@ -54,6 +54,20 @@ class DataBase:
                     user_id INTEGER NOT NULL,
                     estimation INTEGER NOT NULL,
                     condition TEXT NOT NULL
+                )
+            ''')
+
+            #task
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS tasks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    task_text TEXT NOT NULL,
+                    priority INTEGER DEFAULT 0,
+                    done INTEGER DEFAULT 0,
+                    date DATE DEFAULT (date('now', 'localtime')),
+                    created_at TIMESTAMP DEFAULT (datetime('now', 'localtime')),
+                    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
                 )
             ''')
     # USER + PROFILE
@@ -100,7 +114,7 @@ class DataBase:
                 UPDATE users
                 SET height = ?, weight = ?, age = ?
                 WHERE user_id = ?
-            ''', (weight, height, age, user_id))
+            ''', (height, weight, age, user_id))
 
     # FOOD CATEGORY
     def add_food(self, user_id, product, protein, calories):
@@ -123,10 +137,28 @@ class DataBase:
     def get_today_food(self, user_id):
         with self.get_db() as conn:
             cursor = conn.execute('''
-                SELECT product, protein, calories, time(created_at) as time_only 
+                SELECT product, protein, calories, strftime('%H:%M', created_at) as time_only
                 FROM food 
                 WHERE user_id = ? AND date = date('now', 'localtime')
                 ORDER BY created_at DESC
+            ''', (user_id,))
+            result = cursor.fetchall()
+            return result
+    # TASK CATEGORY
+    def add_task(self, user_id, task_text, priority):
+        with self.get_db() as conn:
+            conn.execute('''
+                INSERT INTO tasks (user_id, task_text,  priority) 
+                VALUES (?,?,?)
+            ''', (user_id, task_text, priority))
+
+    def get_tasks(self, user_id):
+        with self.get_db() as conn:
+            cursor = conn.execute('''
+                SELECT id, task_text, priority, strftime('%H:%M', created_at) as time_only
+                FROM tasks 
+                WHERE user_id = ? 
+                ORDER BY priority DESC
             ''', (user_id,))
             result = cursor.fetchall()
             return result

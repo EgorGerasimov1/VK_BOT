@@ -3,11 +3,13 @@ from .base import BaseHandler
 from config import COUNTER_FOOD_PROTEIN, COUNTER_FOOD_CALORIES, MAX_AMOUNT_CALORIES, MAX_AMOUNT_PROTEIN
 
 class FoodHandler(BaseHandler):
+    def __init__(self, db, waiting, bot):
+        super().__init__(db, waiting, bot)
 
     def handler(self, user_id, peer_id, message_id, action):
         if action == 'menu':
             self.bot.edit_message(peer_id, message_id, 'Меню еда', KeyboardManager.get_food_menu())
-        elif action == 'today':
+        elif action == 'add':
             self.bot.send_message(user_id, 'Напиши что сегодня поел по форме:\nПродукт белок калории')
             self.waiting.insert_waiting(user_id, 'food')
         elif action == 'stats':
@@ -71,9 +73,9 @@ class FoodHandler(BaseHandler):
         today_food = self.db.get_today_stats_food(user_id)
         food_list = self.db.get_today_food(user_id)
         calculate_data = self.db.get_calculate_data(user_id)
-        return self.form_today_stats(today_food, food_list, calculate_data)
+        return self.form_stats_message(today_food, food_list, calculate_data)
         
-    def form_today_stats(self, today_food, food_list, data):
+    def form_stats_message(self, today_food, food_list, data):
         rda = self.calculate_rda(data['weight'])
         bmr = self.calculate_bmr( data['weight'], data['height'], data['age'], data['gender'])
 
@@ -82,8 +84,9 @@ class FoodHandler(BaseHandler):
         message += f"Калорий за сегодня: {today_food['total_calories'] or '0'}\n"
         message += f"Сколько нужно: От {rda['min_protein']} до {rda['max_protein']}г белка, {bmr} ккал\n"
         if food_list:
+            message += 'Сегодня вы съели:\n'
             for food in food_list:
-                message += f"-{food['product']}: {food['protein']}г белка, {food['calories']} ккал, {food['time_only']}"
+                message += f"{food['product']}: {food['protein']}г белка, {food['calories']} ккал, {food['time_only']}"
                 message += '\n'
         else:
             message += 'Сегодня вы еще не ели\n'

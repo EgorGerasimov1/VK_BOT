@@ -3,7 +3,9 @@ from .base import BaseHandler
 from config import MAX_HEIGHT, MIN_HEIGHT, MAX_AGE, MAX_WEIGHT, MIN_WEIGHT, MIN_BMI, MAX_BMI
 
 class ProfileHandler(BaseHandler):
-
+    def __init__(self, db, waiting, bot):
+        super().__init__(db, waiting, bot)
+        
     def handler(self, user_id, peer_id, message_id, action):
         if action == 'menu':
             message = self.profile(user_id)

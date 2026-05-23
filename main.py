@@ -5,7 +5,7 @@ from categories import HANDLERS_CLASSES
 from vkbot import VkBot
 from keyboard import KeyboardManager
 from database import DataBase
-from waiting import Waiting
+from state import Waiting
 from cache import BotCaсhe
 from user_manager import User_Manager
 import time
