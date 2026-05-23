@@ -58,6 +58,16 @@ class KeyboardManager:
         keyboard = VkKeyboard(inline=True)
         keyboard.add_callback_button('Задачи сегодня', payload={'type': 'task', 'action': 'add'})
         keyboard.add_callback_button('Управление задачами', payload={'type': 'task', 'action': 'control'})
+        keyboard.add_callback_button('История выполненных задач', payload={'type': 'task', 'action': 'history'})
         keyboard.add_line()
         keyboard.add_callback_button('Назад', payload={'type': 'main_menu', 'action': 'back'})
+        return keyboard
+    
+    def get_task_control_menu():
+        keyboard = VkKeyboard(inline=True)
+        keyboard.add_callback_button('Завершить', payload={'type': 'task', 'action': 'done'})
+        keyboard.add_callback_button('Удалить', payload={'type': 'task', 'action': 'del'})
+        keyboard.add_callback_button('Изменить', payload={'type': 'task', 'action': 'edit'})
+        keyboard.add_line()
+        keyboard.add_callback_button('назад', payload={'type': 'task', 'action': 'menu'})
         return keyboard

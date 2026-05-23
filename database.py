@@ -162,3 +162,9 @@ class DataBase:
             ''', (user_id,))
             result = cursor.fetchall()
             return result
+    
+    def delete_task(self,user_id, id):
+        with self.get_db() as conn:
+            conn.execute('''
+                DELETE FROM tasks where user_id = ? AND id = ?
+            ''', (user_id, id))

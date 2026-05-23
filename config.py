@@ -13,6 +13,7 @@ MAX_LEN_MESSAGE = 100
 #DB
 DATABASE_PATH = 'data/database.db'
 
+#Dict keys category
 
 #Food
 MAX_AMOUNT_PROTEIN = 100
@@ -31,7 +32,7 @@ COUNTER_FOOD_CALORIES = {
     0: 'Очень низкая калорийность'
 }
 
-#profile
+#Profile
 MAX_AGE  = 120
 MIN_HEIGHT = 55
 MAX_HEIGHT = 251
